@@ -9,7 +9,9 @@ CuratorOperator：具体操作类
     　　deleteNode()：删除节点>>guaranteed()：保证删除  deletingChildrenIfNeeded()：删除子节点  
     　　existNode()：判断节点是否存在返回Stat   
     
-CuratorWatcherAndAcl：监听和权限操作  
+CuratorWatcherAndAcl：监听事件类
 　　watcherNode()：watcher事件监听，监听只会触发一次，监听当前路径的操作>>useingWatcher(Watcher) >>useingWatcher(CuratorWatcher)  
 　　watcher()：watcher事件监听，永久性事件。采用NodeCache监听当前路径事件  
-　　childWatcher()：子节点事件监听，PathChildrenCache()方法，start后初始化方式
+　　childWatcher()：子节点事件监听，PathChildrenCache()方法，start后初始化方式  
+ 
+CuratorAcl：权限操作类
