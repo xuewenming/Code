@@ -14,4 +14,6 @@ CuratorWatcherAndAcl：监听事件类
 　　watcher()：watcher事件监听，永久性事件。采用NodeCache监听当前路径事件  
 　　childWatcher()：子节点事件监听，PathChildrenCache()方法，start后初始化方式  
  
-CuratorAcl：权限操作类
+CuratorAcl：权限操作类  
+　　setAcl()：设置权限  >>Acl >> Id >>  DigestAuthenticationProvider.generateDigest(userPwd)  
+　　.authorization("digest","user:pwd")：登录验证

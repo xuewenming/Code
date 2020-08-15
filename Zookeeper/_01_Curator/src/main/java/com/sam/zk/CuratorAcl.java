@@ -31,19 +31,12 @@ public class CuratorAcl {
     public CuratorAcl() {
         RetryPolicy retryPolicy = new RetryNTimes(5, 5000);
         client = CuratorFrameworkFactory.builder().retryPolicy(retryPolicy)
-                .authorization("digest","root:root".getBytes()) // 登录验证
+                .authorization("digest","root2:root2".getBytes()) // 登录验证
                 .connectString(zkServerPath)
                 .sessionTimeoutMs(5000)
                 .namespace("workspace")
                 .build();
-    }
-
-
-    private void creatNode(CuratorAcl cto) throws Exception {
-        cto.client.create().creatingParentsIfNeeded()
-                .withMode(CreateMode.PERSISTENT)
-                .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)
-                .forPath(nodePath, "bbb".getBytes());
+        client.start();
     }
 
     private String getDigestUserPwd(String userPwd) {
@@ -56,24 +49,49 @@ public class CuratorAcl {
         return digest;
     }
 
-    private void nodeOperator(){
-
+    // 更新节点操作
+    private void updateNode(CuratorAcl acl) throws Exception {
+        byte[] updateData = "balabala".getBytes();
+        acl.client.setData().forPath(nodePath, updateData);
     }
 
-    public static void main(String[] args) throws Exception {
-        CuratorAcl acl = new CuratorAcl();
+    private void deleteNode(CuratorAcl acl) throws Exception {
+        acl.client.delete().guaranteed().deletingChildrenIfNeeded().forPath(nodePath);
+    }
+
+    public void getNode(CuratorAcl acl) throws Exception {
+        Stat stat = new Stat();
+        byte[] bytes = acl.client.getData().storingStatIn(stat).forPath(nodePath);
+        System.out.println(new String(bytes));
+    }
+
+
+
+
+    // 设置权限
+    private void setAcl(CuratorAcl acl) throws Exception {
         List<ACL> aclList = new ArrayList<>();
-        Id user1 = new Id("digest",acl.getDigestUserPwd("root:root"));
+        Id user1 = new Id("digest", acl.getDigestUserPwd("root:root"));
         Id user2 = new Id("digest", acl.getDigestUserPwd("root2:root2"));
         aclList.add(new ACL(ZooDefs.Perms.ALL, user1));
         aclList.add(new ACL(ZooDefs.Perms.READ, user2));
         aclList.add(new ACL(ZooDefs.Perms.DELETE | ZooDefs.Perms.CREATE, user2));
 
+        acl.client.create().creatingParentsIfNeeded()
+                .withMode(CreateMode.PERSISTENT)
+                .withACL(aclList)
+                .forPath(nodePath, "bbb".getBytes());
+
         // 节点设置权限
         acl.client.setACL().withACL(aclList).forPath("/curatorNode");
-        byte[] newData = "batman".getBytes();
+    }
 
-
+    public static void main(String[] args) throws Exception {
+        CuratorAcl acl = new CuratorAcl();
+//        acl.setAcl(acl);
+//        acl.updateNode(acl);
+//        acl.getNode(acl);
+        System.out.println(acl.getDigestUserPwd("root:root"));
 
 
     }
