@@ -15,5 +15,14 @@ CuratorWatcherAndAcl：监听事件类
 　　childWatcher()：子节点事件监听，PathChildrenCache()方法，start后初始化方式  
  
 CuratorAcl：权限操作类  
-　　setAcl()：设置权限  >>Acl >> Id >>  DigestAuthenticationProvider.generateDigest(userPwd)  
-　　.authorization("digest","user:pwd")：登录验证
+　　setAcl()：设置权限 >>Acl >> Id >>
+DigestAuthenticationProvider.generateDigest(userPwd)  
+　　.authorization("digest","user:pwd")：登录验证  
+  
+Zookeeper分布式锁流程：  
+
+访问资源->获得锁   
+
+判断锁是否被占用   
+
+->创建zk节点->拥有锁->释放锁 | 占用（等待释放）
