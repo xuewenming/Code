@@ -11,6 +11,9 @@
   <name>Zookeeper</name>
   <modules>
     <module>_01_Curator</module>
+    <module>_03_ZKApiUse</module>
+    <module>_02_ZKApi</module>
+    <module>_04_ZKCuratorAPI</module>
   </modules>
 
   <properties>
